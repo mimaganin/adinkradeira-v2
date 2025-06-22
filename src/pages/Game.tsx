@@ -100,13 +100,14 @@ const Game = () => {
     setCardPiles(prevPiles => 
       prevPiles.map(pile => {
         if (pile.id === pileId) {
-          if (pile.isFlipped) {
-            // Se já está virada, desvira
-            return { ...pile, isFlipped: false, currentCard: null };
-          } else {
+          if (!pile.isFlipped) {
             // Se não está virada, vira e sorteia nova carta
             const newCard = getRandomItem(pile.cards);
             return { ...pile, isFlipped: true, currentCard: newCard };
+          } else {
+            // Se já está virada, sorteia nova carta mantendo virada
+            const newCard = getRandomItem(pile.cards);
+            return { ...pile, currentCard: newCard };
           }
         }
         return pile;
