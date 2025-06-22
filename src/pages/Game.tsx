@@ -97,16 +97,20 @@ const Game = () => {
   };
 
   const flipCard = (pileId: string) => {
+    console.log('Clicou na carta:', pileId);
+    
     setCardPiles(prevPiles => 
       prevPiles.map(pile => {
         if (pile.id === pileId) {
           if (!pile.isFlipped) {
             // Se não está virada, vira e sorteia nova carta
             const newCard = getRandomItem(pile.cards);
+            console.log('Virando carta e sorteando:', newCard);
             return { ...pile, isFlipped: true, currentCard: newCard };
           } else {
             // Se já está virada, sorteia nova carta mantendo virada
             const newCard = getRandomItem(pile.cards);
+            console.log('Sorteando nova carta:', newCard);
             return { ...pile, currentCard: newCard };
           }
         }
@@ -202,17 +206,18 @@ const Game = () => {
                   onClick={() => flipCard(pile.id)}
                 >
                   <div className={`card-container ${pile.isFlipped ? 'flipped' : ''}`}>
+                    {/* Verso da carta */}
                     <div className="card-face card-back">
                       <img 
                         src={pile.backImage} 
                         alt={`${pile.title} - Verso`}
                         className="w-full h-full object-cover rounded-lg shadow-lg"
                         onError={(e) => {
-                          // Fallback para placeholder se imagem não carregar
                           (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
                         }}
                       />
                     </div>
+                    {/* Frente da carta */}
                     <div className="card-face card-front">
                       {pile.currentCard && (
                         <img 
@@ -220,7 +225,6 @@ const Game = () => {
                           alt={`${pile.title} - Carta revelada`}
                           className="w-full h-full object-cover rounded-lg shadow-lg"
                           onError={(e) => {
-                            // Fallback para placeholder se imagem não carregar
                             (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
                           }}
                         />
@@ -298,7 +302,7 @@ const Game = () => {
           width: 100%;
           height: 100%;
           transform-style: preserve-3d;
-          transition: transform 0.6s;
+          transition: transform 0.6s ease;
         }
 
         .card-container.flipped {
@@ -313,12 +317,12 @@ const Game = () => {
           border-radius: 0.5rem;
         }
 
-        .card-front {
-          transform: rotateY(180deg);
-        }
-
         .card-back {
           transform: rotateY(0deg);
+        }
+
+        .card-front {
+          transform: rotateY(180deg);
         }
       `}</style>
     </div>
