@@ -102,15 +102,14 @@ const Game = () => {
     setCardPiles(prevPiles => 
       prevPiles.map(pile => {
         if (pile.id === pileId) {
+          const newCard = getRandomItem(pile.cards);
+          console.log('Carta sorteada:', newCard, 'Estava virada:', pile.isFlipped);
+          
           if (!pile.isFlipped) {
-            // Se não está virada, vira e sorteia nova carta
-            const newCard = getRandomItem(pile.cards);
-            console.log('Virando carta e sorteando:', newCard);
+            // Primeira vez: vira a carta e mostra nova carta
             return { ...pile, isFlipped: true, currentCard: newCard };
           } else {
-            // Se já está virada, sorteia nova carta mantendo virada
-            const newCard = getRandomItem(pile.cards);
-            console.log('Sorteando nova carta:', newCard);
+            // Já está virada: apenas troca a carta, mantém virada
             return { ...pile, currentCard: newCard };
           }
         }
@@ -170,7 +169,7 @@ const Game = () => {
           </div>
 
           <div className="bg-white/70 backdrop-blur-sm rounded-lg p-6 mb-8 shadow-lg">
-            <div className="flex flex-wrap justify-between items-center gap-4">
+            <div className="flex flex-wrap justify-between items-center gap-3">
               <div className="text-amber-900">
                 <p className="font-semibold">
                   Jogue online ou imprima as cartas para jogar fisicamente!
@@ -205,30 +204,32 @@ const Game = () => {
                   className="relative w-full aspect-[3/4] max-w-xs mx-auto cursor-pointer transform transition-all duration-300 hover:scale-105"
                   onClick={() => flipCard(pile.id)}
                 >
-                  <div className={`card-container ${pile.isFlipped ? 'flipped' : ''}`}>
-                    {/* Verso da carta */}
-                    <div className="card-face card-back">
-                      <img 
-                        src={pile.backImage} 
-                        alt={`${pile.title} - Verso`}
-                        className="w-full h-full object-cover rounded-lg shadow-lg"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
-                        }}
-                      />
-                    </div>
-                    {/* Frente da carta */}
-                    <div className="card-face card-front">
-                      {pile.currentCard && (
+                  <div className="card-flip-container">
+                    <div className={`card-inner ${pile.isFlipped ? 'is-flipped' : ''}`}>
+                      {/* Verso da carta */}
+                      <div className="card-face card-back">
                         <img 
-                          src={`/images/${pile.currentCard}`}
-                          alt={`${pile.title} - Carta revelada`}
+                          src={pile.backImage} 
+                          alt={`${pile.title} - Verso`}
                           className="w-full h-full object-cover rounded-lg shadow-lg"
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
                           }}
                         />
-                      )}
+                      </div>
+                      {/* Frente da carta */}
+                      <div className="card-face card-front">
+                        {pile.currentCard && (
+                          <img 
+                            src={`/images/${pile.currentCard}`}
+                            alt={`${pile.title} - Carta revelada`}
+                            className="w-full h-full object-cover rounded-lg shadow-lg"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -296,16 +297,22 @@ const Game = () => {
         </div>
       </div>
 
-      <style>{`
-        .card-container {
+      <style jsx>{`
+        .card-flip-container {
+          perspective: 1000px;
+          width: 100%;
+          height: 100%;
+        }
+
+        .card-inner {
           position: relative;
           width: 100%;
           height: 100%;
           transform-style: preserve-3d;
-          transition: transform 0.6s ease;
+          transition: transform 0.6s ease-in-out;
         }
 
-        .card-container.flipped {
+        .card-inner.is-flipped {
           transform: rotateY(180deg);
         }
 
