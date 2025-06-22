@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import JSZip from "jszip";
 
 // Arrays de cartas disponíveis
 const adinkras = [
@@ -138,12 +139,54 @@ const Game = () => {
     });
   };
 
-  const handleDownloadCards = () => {
+  const handleDownloadCards = async () => {
+  toast({
+    title: "Gerando arquivo ZIP... ⏳",
+    description: "Aguarde enquanto preparamos as cartas para download.",
+  });
+
+  const zip = new JSZip();
+  const imageFolder = zip.folder("cartas");
+
+  const allImages = [
+    ...adinkras,
+    ...scenarios,
+    ...characters,
+    ...missions,
+    "adinkra-back.png",
+    "scenario-back.png",
+    "character-back.png",
+    "mission-back.png"
+  ];
+
+  try {
+    await Promise.all(
+      allImages.map(async (filename) => {
+        const response = await fetch(`/images/${filename}`);
+        const blob = await response.blob();
+        imageFolder?.file(filename, blob);
+      })
+    );
+
+    const content = await zip.generateAsync({ type: "blob" });
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(content);
+    link.download = "cartas-adinkradeira.zip";
+    link.click();
+
     toast({
-      title: "Download disponível! 📥",
-      description: "Em breve você poderá baixar as cartas para imprimir e jogar fisicamente!",
+      title: "Download iniciado! 📥",
+      description: "Você está baixando as cartas para imprimir e jogar fisicamente!",
     });
-  };
+  } catch (error) {
+    toast({
+      title: "Erro ao gerar o ZIP ❌",
+      description: "Verifique sua conexão e tente novamente.",
+    });
+    console.error("Erro ao gerar zip:", error);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
