@@ -1,4 +1,3 @@
-
 import { ArrowLeft, RotateCcw, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -292,7 +291,7 @@ const Game = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .card-container {
           position: relative;
           width: 100%;
