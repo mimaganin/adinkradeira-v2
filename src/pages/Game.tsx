@@ -297,7 +297,7 @@ const Game = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .card-flip-container {
           perspective: 1000px;
           width: 100%;
