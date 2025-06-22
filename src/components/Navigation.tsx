@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Menu, X, Home, Info, GraduationCap, Gamepad2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import "adinkra-icons/css/icons.css";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,8 +21,8 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           <Link to="/" className="flex items-center gap-2">
-            <div className="text-2xl">⚖️</div>
-            <span className="text-2xl font-bold text-amber-900">AdinkraDeira</span>
+            <i className="adk text-amber-900 text-3xl adk-sankofa-two"></i>
+            <span className="text-2xl font-bold text-amber-900">Adinkradeira</span>
           </Link>
 
           {/* Desktop Navigation */}

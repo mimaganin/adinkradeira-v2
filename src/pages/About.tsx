@@ -1,6 +1,7 @@
 
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import "adinkra-icons/css/icons.css";
 
 const About = () => {
   return (
@@ -61,7 +62,7 @@ const About = () => {
             
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center bg-white/50 rounded-lg p-4">
-                <div className="text-4xl mb-3">⚖️</div>
+                <i className="adk text-4xl adk-adinkrahene"></i>
                 <h3 className="font-bold text-amber-800 mb-2">Adinkrahene</h3>
                 <p className="text-sm text-gray-700">
                   Símbolo da liderança e carisma
@@ -69,7 +70,7 @@ const About = () => {
               </div>
               
               <div className="text-center bg-white/50 rounded-lg p-4">
-                <div className="text-4xl mb-3">🕊️</div>
+                <i className="adk text-4xl adk-sankofa-two"></i>
                 <h3 className="font-bold text-amber-800 mb-2">Sankofa</h3>
                 <p className="text-sm text-gray-700">
                   Olhar para o passado para construir o futuro
@@ -77,7 +78,7 @@ const About = () => {
               </div>
               
               <div className="text-center bg-white/50 rounded-lg p-4">
-                <div className="text-4xl mb-3">💪</div>
+                <i className="adk text-4xl adk-dwennimmen"></i>
                 <h3 className="font-bold text-amber-800 mb-2">Dwennimmen</h3>
                 <p className="text-sm text-gray-700">
                   Força e humildade

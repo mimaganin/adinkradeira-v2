@@ -7,19 +7,19 @@ const Hero = () => {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute inset-0 opacity-10">
+      {/* <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 text-6xl rotate-12">⚖️</div>
         <div className="absolute top-40 right-20 text-4xl -rotate-12">🕊️</div>
         <div className="absolute bottom-32 left-20 text-5xl rotate-45">💪</div>
         <div className="absolute bottom-20 right-10 text-4xl -rotate-45">🌟</div>
-      </div>
+      </div> */}
       
       <div className="relative container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-8">
             <h1 className="text-5xl md:text-7xl font-bold text-amber-900 mb-6 leading-tight">
               Adinkra
-              <span className="block text-red-700">Deira</span>
+              <span className="block text-red-700">deira</span>
             </h1>
             <div className="w-32 h-2 bg-gradient-to-r from-amber-600 to-red-600 mx-auto mb-8"></div>
           </div>
@@ -44,7 +44,7 @@ const Hero = () => {
               <Gamepad2 className="mx-auto text-amber-600 mb-4" size={48} />
               <h3 className="font-bold text-amber-900 mb-2">Jogue</h3>
               <p className="text-sm text-gray-700">
-                Divirta-se com jogos educativos interativos
+                Divirta-se com este jogo educativo interativo
               </p>
             </div>
             
@@ -84,7 +84,7 @@ const Hero = () => {
             <p className="text-gray-700 leading-relaxed">
               Através dos símbolos Adinkra, conectamos passado e presente, 
               promovendo uma educação inclusiva que valoriza a diversidade 
-              e combate o racismo estrutural.
+              e combate o racismo estrutural por meio da intencionalidade pedagógica e da diversão.
             </p>
           </div>
         </div>

@@ -1,6 +1,7 @@
 
-import { Heart, Github, Mail } from "lucide-react";
+import { Heart, Code, Mail, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
+import "adinkra-icons/css/icons.css";
 
 const Footer = () => {
   return (
@@ -9,17 +10,22 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="text-2xl">⚖️</div>
-              <span className="text-2xl font-bold">AdinkraDeira</span>
+              <i className="adk text-2xl adk-sankofa-two"></i>
+              <span className="text-2xl font-bold">Adinkradeira</span>
             </div>
             <p className="text-amber-100 leading-relaxed mb-4">
               Promovendo educação antirracista e narrativas decoloniais 
               através da sabedoria ancestral dos símbolos Adinkra.
             </p>
             <div className="flex items-center gap-2 text-amber-200">
-              <span>Feito com</span>
+              <span>Criado com</span>
               <Heart size={16} className="text-red-400" />
-              <span>para uma educação mais justa</span>
+              <span>por <a href="https://www.linkedin.com/in/mar%C3%ADlia-freitas-rossi/"> Marília Rossi - GIRA Educação</a></span>
+              
+            </div>
+            <div className="flex items-center gap-1 text-amber-200">
+              <Code size={18} className="text-red-40 mt-4" />
+              <span className="text-amber-200 mt-4 text-sm"><a href="https://github.com/mimaganin/">Milena Maganin</a></span>
             </div>
           </div>
           
@@ -48,20 +54,17 @@ const Footer = () => {
                 <Mail size={16} />
                 Contato
               </Link>
-              <a 
-                href="#" 
-                className="flex items-center gap-2 text-amber-200 hover:text-white transition-colors"
-              >
-                <Github size={16} />
-                GitHub
-              </a>
+              <Link to="https://www.linkedin.com/in/mar%C3%ADlia-freitas-rossi/" className="flex items-center gap-2 text-amber-200 hover:text-white transition-colors">
+                <Linkedin size={16} />
+                <span>Marília Rossi</span>
+              </Link>
             </div>
           </div>
         </div>
         
         <div className="border-t border-amber-800 mt-8 pt-8 text-center">
           <p className="text-amber-200">
-            © 2024 AdinkraDeira. Todos os direitos reservados. 
+            © 2025 Adinkradeira - GIRA Educação. Todos os direitos reservados. 
             Desenvolvido com tecnologia educacional acessível.
           </p>
         </div>

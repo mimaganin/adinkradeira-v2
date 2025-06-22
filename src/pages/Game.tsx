@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import JSZip from "jszip";
+import "adinkra-icons/css/icons.css";
 
 // Arrays de cartas disponíveis
 const adinkras = [
@@ -311,7 +312,7 @@ const Game = () => {
               </h2>
               <div className="space-y-3 text-gray-700">
                 <div className="flex items-center gap-3">
-                  <div className="text-2xl">⚖️</div>
+                  <i className="adk text-4xl adk-sankofa-two"></i>
                   <div>
                     <strong>Símbolos Adinkra:</strong> Sabedoria ancestral africana
                   </div>
