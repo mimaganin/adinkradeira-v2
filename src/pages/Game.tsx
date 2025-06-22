@@ -1,136 +1,145 @@
 
-import { ArrowLeft, RotateCcw, Trophy } from "lucide-react";
+import { ArrowLeft, RotateCcw, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 
-interface AdinkraCard {
-  id: number;
-  symbol: string;
-  name: string;
-  meaning: string;
-  description: string;
-}
-
-const adinkraCards: AdinkraCard[] = [
-  {
-    id: 1,
-    symbol: "⚖️",
-    name: "Adinkrahene",
-    meaning: "Liderança",
-    description: "Símbolo da liderança, carisma e grandeza"
-  },
-  {
-    id: 2,
-    symbol: "🕊️",
-    name: "Sankofa",
-    meaning: "Voltar e buscar",
-    description: "Olhar para o passado para construir o futuro"
-  },
-  {
-    id: 3,
-    symbol: "💪",
-    name: "Dwennimmen",
-    meaning: "Força",
-    description: "Força e humildade"
-  },
-  {
-    id: 4,
-    symbol: "🌟",
-    name: "Nkyinkyim",
-    meaning: "Adaptabilidade",
-    description: "Iniciativa, dinamismo e versatilidade"
-  },
-  {
-    id: 5,
-    symbol: "🔄",
-    name: "Mpatapo",
-    meaning: "Reconciliação",
-    description: "Símbolo da reconciliação e pacificação"
-  },
-  {
-    id: 6,
-    symbol: "🛡️",
-    name: "Eban",
-    meaning: "Proteção",
-    description: "Símbolo do amor, segurança e proteção"
-  }
+// Arrays de cartas disponíveis
+const adinkras = [
+  "adinkra1.png",
+  "adinkra2.png", 
+  "adinkra3.png",
+  "adinkra4.png",
+  "adinkra5.png",
+  "adinkra6.png",
+  "adinkra7.png",
+  "adinkra8.png",
+  "adinkra9.png",
+  "adinkra10.png",
+  "adinkra12.png",
 ];
 
+const scenarios = [
+  "scenario1.png",
+  "scenario2.png",
+  "scenario3.png",
+  "scenario4.png",
+  "scenario5.png",
+  "scenario6.png"
+];
+
+const characters = [
+  "character1.png",
+  "character2.png",
+  "character3.png",
+  "character4.png",
+  "character5.png",
+  "character6.png"
+];
+
+const missions = [
+  "mission1.png",
+  "mission2.png",
+  "mission3.png",
+  "mission4.png",
+  "mission5.png",
+  "mission6.png"
+];
+
+interface CardPile {
+  id: string;
+  title: string;
+  backImage: string;
+  cards: string[];
+  currentCard: string | null;
+  isFlipped: boolean;
+}
+
 const Game = () => {
-  const [cards, setCards] = useState<(AdinkraCard & { isFlipped: boolean; isMatched: boolean })[]>([]);
-  const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const [score, setScore] = useState(0);
-  const [moves, setMoves] = useState(0);
-  const [gameComplete, setGameComplete] = useState(false);
+  const [cardPiles, setCardPiles] = useState<CardPile[]>([
+    {
+      id: 'symbols-pile',
+      title: 'Símbolos Adinkra',
+      backImage: '/images/adinkra-back.png',
+      cards: adinkras,
+      currentCard: null,
+      isFlipped: false
+    },
+    {
+      id: 'scenarios-pile',
+      title: 'Cenários',
+      backImage: '/images/scenario-back.png',
+      cards: scenarios,
+      currentCard: null,
+      isFlipped: false
+    },
+    {
+      id: 'characters-pile',
+      title: 'Personagens',
+      backImage: '/images/character-back.png',
+      cards: characters,
+      currentCard: null,
+      isFlipped: false
+    },
+    {
+      id: 'missions-pile',
+      title: 'Missões',
+      backImage: '/images/mission-back.png',
+      cards: missions,
+      currentCard: null,
+      isFlipped: false
+    }
+  ]);
 
-  useEffect(() => {
-    initializeGame();
-  }, []);
-
-  const initializeGame = () => {
-    const duplicatedCards = [...adinkraCards, ...adinkraCards]
-      .map(card => ({ ...card, isFlipped: false, isMatched: false }))
-      .sort(() => Math.random() - 0.5);
-    
-    setCards(duplicatedCards);
-    setFlippedCards([]);
-    setScore(0);
-    setMoves(0);
-    setGameComplete(false);
+  const getRandomItem = (array: string[]) => {
+    const randomIndex = Math.floor(Math.random() * array.length);
+    return array[randomIndex];
   };
 
-  const handleCardClick = (index: number) => {
-    if (flippedCards.length === 2 || cards[index].isFlipped || cards[index].isMatched) {
-      return;
-    }
+  const flipCard = (pileId: string) => {
+    setCardPiles(prevPiles => 
+      prevPiles.map(pile => {
+        if (pile.id === pileId) {
+          if (pile.isFlipped) {
+            // Se já está virada, desvira
+            return { ...pile, isFlipped: false, currentCard: null };
+          } else {
+            // Se não está virada, vira e sorteia nova carta
+            const newCard = getRandomItem(pile.cards);
+            return { ...pile, isFlipped: true, currentCard: newCard };
+          }
+        }
+        return pile;
+      })
+    );
 
-    const newCards = [...cards];
-    newCards[index].isFlipped = true;
-    setCards(newCards);
-
-    const newFlippedCards = [...flippedCards, index];
-    setFlippedCards(newFlippedCards);
-
-    if (newFlippedCards.length === 2) {
-      setMoves(moves + 1);
-      
-      setTimeout(() => {
-        checkMatch(newFlippedCards);
-      }, 1000);
-    }
+    toast({
+      title: "Carta revelada! 🎴",
+      description: "Use as cartas reveladas para criar sua narrativa única!",
+    });
   };
 
-  const checkMatch = (flippedIndices: number[]) => {
-    const [first, second] = flippedIndices;
-    const newCards = [...cards];
+  const resetAllCards = () => {
+    setCardPiles(prevPiles => 
+      prevPiles.map(pile => ({
+        ...pile,
+        isFlipped: false,
+        currentCard: null
+      }))
+    );
 
-    if (newCards[first].id === newCards[second].id) {
-      newCards[first].isMatched = true;
-      newCards[second].isMatched = true;
-      setScore(score + 10);
-      
-      toast({
-        title: "Parabéns! 🎉",
-        description: `Você encontrou o par: ${newCards[first].name}`,
-      });
+    toast({
+      title: "Cartas resetadas! 🔄",
+      description: "Todas as cartas foram viradas para baixo. Comece uma nova narrativa!",
+    });
+  };
 
-      const allMatched = newCards.every(card => card.isMatched);
-      if (allMatched) {
-        setGameComplete(true);
-        toast({
-          title: "Jogo Completo! 🏆",
-          description: `Parabéns! Você completou o jogo em ${moves + 1} movimentos!`,
-        });
-      }
-    } else {
-      newCards[first].isFlipped = false;
-      newCards[second].isFlipped = false;
-    }
-
-    setCards(newCards);
-    setFlippedCards([]);
+  const handleDownloadCards = () => {
+    toast({
+      title: "Download disponível! 📥",
+      description: "Em breve você poderá baixar as cartas para imprimir e jogar fisicamente!",
+    });
   };
 
   return (
@@ -144,108 +153,174 @@ const Game = () => {
           Voltar ao início
         </Link>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl md:text-5xl font-bold text-amber-900 mb-4">
-              Jogo da Memória Adinkra
+              Adinkradeira - Jogo de Narrativas
             </h1>
             <p className="text-lg text-gray-700 mb-6">
-              Encontre os pares de símbolos Adinkra e aprenda seus significados!
+              Crie narrativas decoloniais e antirracistas através dos símbolos Adinkra! 
+              Clique nas cartas para revelar elementos da sua história.
             </p>
             <div className="w-24 h-1 bg-gradient-to-r from-amber-600 to-red-600 mx-auto"></div>
           </div>
 
           <div className="bg-white/70 backdrop-blur-sm rounded-lg p-6 mb-8 shadow-lg">
             <div className="flex flex-wrap justify-between items-center gap-4">
-              <div className="flex gap-6">
-                <div className="flex items-center gap-2">
-                  <Trophy className="text-amber-600" size={20} />
-                  <span className="font-semibold text-amber-900">Pontos: {score}</span>
-                </div>
-                <div className="font-semibold text-amber-900">
-                  Movimentos: {moves}
-                </div>
+              <div className="text-amber-900">
+                <p className="font-semibold">
+                  Jogue online ou imprima as cartas para jogar fisicamente!
+                </p>
               </div>
               
-              <Button 
-                onClick={initializeGame}
-                className="bg-amber-600 hover:bg-amber-700 text-white"
-              >
-                <RotateCcw size={16} className="mr-2" />
-                Reiniciar
-              </Button>
+              <div className="flex gap-3">
+                <Button 
+                  onClick={handleDownloadCards}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <Download size={16} className="mr-2" />
+                  Baixar Cartas
+                </Button>
+                
+                <Button 
+                  onClick={resetAllCards}
+                  className="bg-amber-600 hover:bg-amber-700 text-white"
+                >
+                  <RotateCcw size={16} className="mr-2" />
+                  Resetar Cartas
+                </Button>
+              </div>
             </div>
           </div>
 
-          {gameComplete && (
-            <div className="bg-gradient-to-r from-green-100 to-emerald-100 border border-green-300 rounded-lg p-6 mb-8 text-center">
-              <h2 className="text-2xl font-bold text-green-800 mb-2">
-                🎉 Parabéns! Você completou o jogo!
-              </h2>
-              <p className="text-green-700">
-                Finalizado em {moves} movimentos com {score} pontos!
-              </p>
-            </div>
-          )}
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {cards.map((card, index) => (
-              <div
-                key={index}
-                onClick={() => handleCardClick(index)}
-                className={`
-                  aspect-square bg-white rounded-lg shadow-lg cursor-pointer transition-all duration-300 transform hover:scale-105
-                  ${card.isFlipped || card.isMatched ? 'bg-gradient-to-br from-amber-100 to-orange-100' : 'bg-gradient-to-br from-amber-600 to-red-600'}
-                  ${card.isMatched ? 'opacity-75 cursor-default' : ''}
-                `}
-              >
-                <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                  {card.isFlipped || card.isMatched ? (
-                    <>
-                      <div className="text-4xl mb-2">{card.symbol}</div>
-                      <div className="text-center">
-                        <div className="font-bold text-amber-900 text-sm">{card.name}</div>
-                        <div className="text-xs text-gray-600 mt-1">{card.meaning}</div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="text-6xl text-white/50">?</div>
-                  )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {cardPiles.map((pile) => (
+              <div key={pile.id} className="text-center">
+                <h3 className="text-xl font-bold text-amber-900 mb-4">{pile.title}</h3>
+                <div 
+                  className="relative w-full aspect-[3/4] max-w-xs mx-auto cursor-pointer transform transition-all duration-300 hover:scale-105"
+                  onClick={() => flipCard(pile.id)}
+                >
+                  <div className={`card-container ${pile.isFlipped ? 'flipped' : ''}`}>
+                    <div className="card-face card-back">
+                      <img 
+                        src={pile.backImage} 
+                        alt={`${pile.title} - Verso`}
+                        className="w-full h-full object-cover rounded-lg shadow-lg"
+                        onError={(e) => {
+                          // Fallback para placeholder se imagem não carregar
+                          (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
+                        }}
+                      />
+                    </div>
+                    <div className="card-face card-front">
+                      {pile.currentCard && (
+                        <img 
+                          src={`/images/${pile.currentCard}`}
+                          alt={`${pile.title} - Carta revelada`}
+                          className="w-full h-full object-cover rounded-lg shadow-lg"
+                          onError={(e) => {
+                            // Fallback para placeholder se imagem não carregar
+                            (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1472396961693-142e6e269027?w=400&h=600&fit=crop`;
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="mt-12 bg-white/70 backdrop-blur-sm rounded-lg p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-amber-900 mb-6 text-center">
-              Como Jogar
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-3xl mb-3">🎯</div>
-                <h3 className="font-bold text-amber-800 mb-2">1. Objetivo</h3>
-                <p className="text-sm text-gray-700">
-                  Encontre todos os pares de símbolos Adinkra
-                </p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-amber-900 mb-6">
+                Como Jogar
+              </h2>
+              <div className="space-y-4 text-gray-700">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">1️⃣</div>
+                  <p><strong>Clique nas cartas</strong> para revelar elementos da sua narrativa</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">2️⃣</div>
+                  <p><strong>Combine os elementos</strong> revelados para criar uma história única</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">3️⃣</div>
+                  <p><strong>Explore narrativas</strong> decoloniais e antirracistas</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl">4️⃣</div>
+                  <p><strong>Compartilhe</strong> sua criação com outros jogadores</p>
+                </div>
               </div>
-              <div>
-                <div className="text-3xl mb-3">👆</div>
-                <h3 className="font-bold text-amber-800 mb-2">2. Como Jogar</h3>
-                <p className="text-sm text-gray-700">
-                  Clique em duas cartas para revelá-las
-                </p>
-              </div>
-              <div>
-                <div className="text-3xl mb-3">🏆</div>
-                <h3 className="font-bold text-amber-800 mb-2">3. Pontuação</h3>
-                <p className="text-sm text-gray-700">
-                  Ganhe pontos por cada par encontrado
-                </p>
+            </div>
+
+            <div className="bg-white/70 backdrop-blur-sm rounded-lg p-8 shadow-lg">
+              <h2 className="text-2xl font-bold text-amber-900 mb-6">
+                Elementos do Jogo
+              </h2>
+              <div className="space-y-3 text-gray-700">
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">⚖️</div>
+                  <div>
+                    <strong>Símbolos Adinkra:</strong> Sabedoria ancestral africana
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">🌍</div>
+                  <div>
+                    <strong>Cenários:</strong> Ambientes diversos para suas histórias
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">👥</div>
+                  <div>
+                    <strong>Personagens:</strong> Protagonistas únicos e diversos
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">🎯</div>
+                  <div>
+                    <strong>Missões:</strong> Objetivos e desafios para suas narrativas
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        .card-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          transition: transform 0.6s;
+        }
+
+        .card-container.flipped {
+          transform: rotateY(180deg);
+        }
+
+        .card-face {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          border-radius: 0.5rem;
+        }
+
+        .card-front {
+          transform: rotateY(180deg);
+        }
+
+        .card-back {
+          transform: rotateY(0deg);
+        }
+      `}</style>
     </div>
   );
 };
